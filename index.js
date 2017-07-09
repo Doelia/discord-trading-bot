@@ -9,7 +9,7 @@ client.on('ready', () => {
 client.on('message', message => {
 	if (message.channel.name == 'bot') {
 		let args = message.content.split(' ');
-		if (args[0] == 'sell') {
+		if (args[0].toLowerCase() == 'sell') {
 			let n = args[1];
 			n = n.replace(',', '.');
 			if (n && !isNaN(n)) {
@@ -30,7 +30,7 @@ client.on('message', message => {
 				message.reply('Je comprend pas, tu veux vendre quoi ?');
 			}
 		}
-		if (args[0] == 'lambo') {
+		if (args[0].toLowerCase() == 'lambo') {
 			let n = args[1];
 			if (n) {
 				if (isNaN(n)) {
@@ -52,7 +52,7 @@ client.on('message', message => {
 				message.reply("Ok mais combien tu met ?");
 			}
 		}
-		if (args[0] == 'help') {
+		if (args[0].toLowerCase() == 'help') {
 			let s = "\n";
 			s+= "`sell <montant>` Savoir quand vendre avec/sans gain/perte\n";
 			s+= "`lambo <montant>` Savoir quand tu auras ta lambo\n";
