@@ -11,7 +11,8 @@ client.on('message', message => {
 		let args = message.content.split(' ');
 		if (args[0] == 'sell') {
 			let n = args[1];
-			if (n) {
+			n = n.replace(',', '.');
+			if (n && !isNaN(n)) {
 				let calc = (tx) => {
 					let o = (n * tx / (0.9975 * 0.9975));
 					return 'SELL ' + o.toFixed(8) + "\n";
@@ -22,34 +23,46 @@ client.on('message', message => {
 				s += '+3% : ' + calc(1.03, n);
 				s += '+0% : ' + calc(1, n);
 				s += '-1.5% : ' + calc(0.985, n);
-				s += '-3% :' + calc(0.97, n);
-				s += '(Commissions bittrex de 0.25% incluses)';
+				s += '-3% : ' + calc(0.97, n);
+				s += '*Commissions bittrex de 0.25% incluses*\n';
 				message.reply(s);
+			} else {
+				message.reply('Je comprend pas, tu veux vendre quoi ?');
 			}
 		}
 		if (args[0] == 'lambo') {
 			let n = args[1];
 			if (n) {
-				let calc = (days) => {
-					return Math.floor(n * Math.pow(1.03, days))
-					+ "€\n";
+				if (isNaN(n)) {
+					message.reply("C'est pas un nombre ça");
+				} else {
+					let calc = (days) => {
+						return Math.floor(n * Math.pow(1.03, days))
+						+ "€\n";
+					}
+					let s = "\n";
+					s += "**À coups de 3% par jours :**\n";
+					s += '- ' + n + "€ dans 1 mois : " + calc(30);
+					s += '- ' + n + "€ dans 3 mois : " + calc(30 * 3);
+					s += '- ' + n + "€ dans 6 mois : " + calc(30 * 6);
+					s += '- ' + n + "€ dans 1 an : " + calc(365);
+					message.reply(s);
 				}
-				let s = "\n";
-				s += "**À coups de 3% par jours :**\n";
-				s += '- ' + n + "€ dans 1 mois : " + calc(30);
-				s += '- ' + n + "€ dans 3 mois : " + calc(30 * 3);
-				s += '- ' + n + "€ dans 6 mois : " + calc(30 * 6);
-				s += '- ' + n + "€ dans 1 an : " + calc(365);
-				message.reply(s);
 			} else {
 				message.reply("Ok mais combien tu met ?");
 			}
 		}
 		if (args[0] == 'help') {
 			let s = "\n";
-		
+			s+= "`sell <montant>` Savoir quand vendre avec/sans gain/perte\n";
+			s+= "`lambo <montant>` Savoir quand tu auras ta lambo\n";
+			message.reply(s);
 		}
 	}
 });
 
-client.login('MzMyMjM0MTUyNTMzNTU3MjQ5.DEKrvw.EsS0TpNYM7akaaELhLfhlA_U0BI');
+if (process.argv[2]) {
+	client.login(process.argv[2]);
+} else {
+	console.log('Please enter the bot token');
+}
